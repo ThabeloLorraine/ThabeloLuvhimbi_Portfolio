@@ -1,4 +1,4 @@
-        :root {
+:root {
             --primary: #742774;
             --primary-light: #9a4b9a;
             --secondary: #2179cc;
@@ -68,20 +68,50 @@
             margin-left: 30px;
         }
 
+        /* hide hamburger by default (visible only on small screens) */
+        .hamburger {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            -webkit-tap-highlight-color: transparent;
+            color: var(--dark);
+        }
+
         .nav-links a {
+            position: relative;
+            display: inline-block;
+            padding: 6px 0;
             text-decoration: none;
             color: var(--dark);
             font-weight: 500;
-            transition: var(--transition);
+            transition: color 0.25s ease, transform 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            transform-origin: center;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 3px;
+            transition: transform 0.35s cubic-bezier(.2,.9,.2,1);
         }
 
         .nav-links a:hover {
             color: var(--primary);
+            transform: translateY(-4px);
+            letter-spacing: 0.4px;
         }
 
-        .hamburger {
-            display: none;
-            cursor: pointer;
+        .nav-links a:hover::after {
+            transform: translateX(-50%) scaleX(1);
         }
 
         /* Hero Section */
@@ -159,38 +189,54 @@
 
         .about-content {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 50px;
+            flex-wrap: wrap; /* allow columns to wrap on narrower widths */
+            justify-content: flex-start; /* ensure items start from the left */
         }
 
         .about-text {
-            flex: 1;
-        }
-
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
-
-        .about-text p {
-            margin-bottom: 20px;
-            color: var(--gray);
+            flex: 1 1 360px; /* grow, shrink, preferred min column width */
+            min-width: 260px;
+            order: 2; /* keep text after the image */
         }
 
         .about-image {
-            flex: 1;
-            text-align: center;
-        }
-
-        .profile-img {
+            flex: 0 0 420px; /* fixed column width next to text */
+            max-width: 420px;
             width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            border-radius: 12px;
+            height: 420px; /* consistent visual height next to text */
+            padding: 0; /* ensure no inner spacing */
+            order: 1; /* place image before the text (to the left in row layout) */
+            margin-right: 10px;
         }
 
-        /* Skills Section */
+
+        /* responsive: stack and remove fixed height on smaller screens */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+
+            .about-image {
+                order: -1; /* keep image above text when stacked */
+                flex: 0 0 auto;
+                max-width: 320px;
+                width: 100%;
+                margin: 0 0 20px 0;
+                height: auto; /* allow natural image height when stacked */
+                border-radius: 10px;
+            }
+
+            
+        }
+
         .skills {
             background-color: #f8f9fa;
         }
@@ -459,7 +505,19 @@
             }
 
             .about-image {
-                order: -1;
+                order: -1; /* keep image above text when stacked */
+                flex: 0 0 auto;
+                max-width: 320px;
+                width: 100%;
+                margin: 0 0 20px 0;
+                height: auto; /* allow natural image height when stacked */
+                border-radius: 10px;
+            }
+
+            .profile-img {
+                width: 100%;
+                height: auto;
+                min-height: 0;
             }
         }
 
@@ -478,5 +536,17 @@
 
             .section-title h2 {
                 font-size: 2rem;
+            }
+        }
+
+        /* move button inside about section slightly down for spacing */
+        .about-content .btn {
+            margin-top: 30px;
+        }
+
+        /* adjust on smaller screens */
+        @media (max-width: 992px) {
+            .about-content .btn {
+                margin-top: 12px;
             }
         }
